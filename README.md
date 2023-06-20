@@ -11,21 +11,10 @@ in details and provides guidelines on how to use it, effectively.
 
 ## Installation
 
-aNNoTest can be installed in two ways.
-To install it from PyPi, use
-the following command.
+Run the following command to install aNNoTest:
 
 ```
 pip install annotest
-```
-
-It can also be installed from source code:
-
-```
-git clone git@github.com:atom-sw/annotest.git
-cd annotest
-
-pip install .
 ```
 
 We have tested aNNoTest on Python 3.6.
@@ -41,12 +30,13 @@ and then run aNNoTest.
 
 ```
 cd path_to_python_project
+```
 
+```
 annotest
 ```
 
-Or you can input the project path to aNNoTest
-when running it:
+Or you can input the project path to aNNoTest:
 
 ```
 annotest path_to_python_project

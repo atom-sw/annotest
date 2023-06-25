@@ -1,5 +1,9 @@
 # aNNoTest
 
+[![PyPI version](https://badge.fury.io/py/annotest.svg)](https://badge.fury.io/py/annotest)
+
+<!-- ![PyPI - Downloads](https://img.shields.io/pypi/dm/annotest) -->
+
 aNNoTest is a tool (and an approach) to automatically
 generating bug-finding inputs for NN program testing.
 Paper [An annotation-based approach for finding bugs in

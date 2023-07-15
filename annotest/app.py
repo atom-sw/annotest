@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from annotest import commandline, constant
+
 # from annotest.preparation.fixer_step import fixing_process
 from annotest.preparation.trimmer import keepTestableProject
 from annotest.project_info.collecter import getProject
@@ -11,7 +12,20 @@ from annotest.unittest_engine.generator import generate_tests
 
 
 def remove_unused_imports():
-    command = ["autoflake", "--remove-all-unused-imports", "-i", "-r", constant.testDirName]
+    test_dir_path_str = constant.testDirPath.absolute().resolve()
+    command = [
+        "autoflake",
+        "--remove-all-unused-imports",
+        "-i",
+        "-r",
+        test_dir_path_str,
+    ]
+    subprocess.run(command)
+
+
+def blacken_tests():
+    test_dir_path_str = constant.testDirPath.absolute().resolve()
+    command = ["black", test_dir_path_str]
     subprocess.run(command)
 
 
@@ -21,6 +35,7 @@ def generateTests():
     keepTestableProject(projectDat)
     generate_tests(projectDat)
     remove_unused_imports()
+    blacken_tests()
     print(f"Test generation finished. Tests are in directory `{constant.testDirPath}`.")
 
 

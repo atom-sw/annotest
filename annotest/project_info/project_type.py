@@ -6,7 +6,10 @@ from typing import List, Optional
 from annotest import constant
 from annotest.project_info.decorator_info import decorator_type
 from annotest.project_info.decorator_info import argument_type
-from annotest.project_info.decorator_info.decorator_type import Decorator, ArgumentDecorator
+from annotest.project_info.decorator_info.decorator_type import (
+    Decorator,
+    ArgumentDecorator,
+)
 
 
 # def _pathToTestPath(path: pathlib.PosixPath) -> pathlib.PosixPath:
@@ -15,6 +18,7 @@ from annotest.project_info.decorator_info.decorator_type import Decorator, Argum
 #     name = "test_" + testPath.name
 #     final = parent / name
 #     return final
+
 
 def _pathToTestPath(path: pathlib.PosixPath) -> pathlib.PosixPath:
     parts = list(path.parts)
@@ -34,10 +38,7 @@ class ArgType(Enum):
 
 
 class ArgumentInfo(object):
-    def __init__(self,
-                 name: str,
-                 argType: ArgType,
-                 default: ast.expr = None):
+    def __init__(self, name: str, argType: ArgType, default: ast.expr = None):
         self.name: str = name
         self.type: ArgType = argType
         self.default: ast.expr = default
@@ -53,10 +54,9 @@ class ArgumentInfo(object):
 
 
 class FunctionInfo(object):
-    def __init__(self,
-                 name: str,
-                 args: List[ArgumentInfo],
-                 decorators: List[Decorator]):
+    def __init__(
+        self, name: str, args: List[ArgumentInfo], decorators: List[Decorator]
+    ):
         self.name: str = name
         self.args: List[ArgumentInfo] = args
         self.decorators: List[Decorator] = decorators
@@ -68,8 +68,9 @@ class FunctionInfo(object):
                 argDecoratorList.append(decorator)
         return argDecoratorList
 
-    def getArgumentTypeInformationForArgumentName(self,
-                                                  argName: str) -> Optional[argument_type.ArgumentTypeInformation]:
+    def getArgumentTypeInformationForArgumentName(
+        self, argName: str
+    ) -> Optional[argument_type.ArgumentTypeInformation]:
         argumentDecorators = self._getArgumentDecorators()
         for argumentDecorator in argumentDecorators:
 
@@ -86,7 +87,10 @@ class FunctionInfo(object):
         argTypeInfo = self.getArgumentTypeInformationForArgumentName(argName)
         if argTypeInfo is not None:
             if isinstance(argTypeInfo, argument_type.ComplicatedObject):
-                return argTypeInfo.generatorFunctionInfo is not None and argTypeInfo.generatorFunctionInfo.isTestable()
+                return (
+                    argTypeInfo.generatorFunctionInfo is not None
+                    and argTypeInfo.generatorFunctionInfo.isTestable()
+                )
             else:
                 return True
         else:
@@ -120,7 +124,9 @@ class FunctionInfo(object):
         preconditionDecorators = self.getPreconditionDecorators()
         return len(preconditionDecorators) > 0
 
-    def getComplicatedArgumentTypeInformationDecorators(self) -> List[decorator_type.ArgumentDecorator]:
+    def getComplicatedArgumentTypeInformationDecorators(
+        self,
+    ) -> List[decorator_type.ArgumentDecorator]:
         complicatedObjectArgumentTypeInfoList = []
         argumentDecorators = self._getArgumentDecorators()
         for item in argumentDecorators:
@@ -129,7 +135,9 @@ class FunctionInfo(object):
         return complicatedObjectArgumentTypeInfoList
 
     def hasComplicatedArguments(self) -> bool:
-        complicatedObjectArgumentTypeInfoList = self.getComplicatedArgumentTypeInformationDecorators()
+        complicatedObjectArgumentTypeInfoList = (
+            self.getComplicatedArgumentTypeInformationDecorators()
+        )
         return len(complicatedObjectArgumentTypeInfoList) > 0
 
     def isExcluded(self):
@@ -140,7 +148,9 @@ class FunctionInfo(object):
         return False
 
     def argumentIsComplicatedObject(self, argName: str) -> bool:
-        complicatedObjectArgumentTypeInfoList = self.getComplicatedArgumentTypeInformationDecorators()
+        complicatedObjectArgumentTypeInfoList = (
+            self.getComplicatedArgumentTypeInformationDecorators()
+        )
 
         for item in complicatedObjectArgumentTypeInfoList:
 
@@ -163,10 +173,14 @@ class FunctionInfo(object):
     # This method works after the linking phase
     def _hasGeneratorsWithPreconditions(self) -> bool:
         if self.hasComplicatedArguments():
-            complicatedObjectArgumentTypeInfoList = self.getComplicatedArgumentTypeInformationDecorators()
+            complicatedObjectArgumentTypeInfoList = (
+                self.getComplicatedArgumentTypeInformationDecorators()
+            )
             for item in complicatedObjectArgumentTypeInfoList:
                 if item.arg_type.generatorFunctionInfo is not None:
-                    return item.arg_type.generatorFunctionInfo.hasPreconditionDecorator()
+                    return (
+                        item.arg_type.generatorFunctionInfo.hasPreconditionDecorator()
+                    )
         else:
             return False
 
@@ -183,9 +197,9 @@ class FunctionInfo(object):
 
 
 class InstanceMethodInfo(FunctionInfo):
-    def __init__(self, name: str,
-                 args: List[ArgumentInfo],
-                 decorators: List[Decorator]):
+    def __init__(
+        self, name: str, args: List[ArgumentInfo], decorators: List[Decorator]
+    ):
         super().__init__(name, args, decorators)
 
     def isTestable(self) -> bool:
@@ -197,9 +211,9 @@ class InstanceMethodInfo(FunctionInfo):
 
 
 class ClassInfo(object):
-    def __init__(self,
-                 name: str,
-                 instanceMethodsAndConstructor: List[InstanceMethodInfo]):
+    def __init__(
+        self, name: str, instanceMethodsAndConstructor: List[InstanceMethodInfo]
+    ):
         self.name = name
         self.instanceMethodsAndConstructor = instanceMethodsAndConstructor
 
@@ -244,7 +258,9 @@ class ClassInfo(object):
         else:
             return False
 
-    def _getConstructorExampleDecorator(self) -> Optional[decorator_type.ConstructorExampleDecorator]:
+    def _getConstructorExampleDecorator(
+        self,
+    ) -> Optional[decorator_type.ConstructorExampleDecorator]:
         constructor = self.getConstructor()
         if constructor is None:
             return None
@@ -266,13 +282,15 @@ class ClassInfo(object):
 
 
 class ModuleInfo(object):
-    def __init__(self,
-                 path,
-                 functions: List[FunctionInfo],
-                 classes: List[ClassInfo],
-                 imports: List[ast.stmt],
-                 topLevelItemNameList: List[str],
-                 has_module_import_test: bool):
+    def __init__(
+        self,
+        path,
+        functions: List[FunctionInfo],
+        classes: List[ClassInfo],
+        imports: List[ast.stmt],
+        topLevelItemNameList: List[str],
+        has_module_import_test: bool,
+    ):
         self.path = path
         self.functions: List[FunctionInfo] = functions
         self.classes: List[ClassInfo] = classes
@@ -314,12 +332,13 @@ class ModuleInfo(object):
 
 
 class PackageInfo(object):
-    def __init__(self,
-                 path: pathlib.PosixPath,
-                 modules: List[ModuleInfo],
-                 packages,
-                 # hasInit: bool
-                 ):
+    def __init__(
+        self,
+        path: pathlib.PosixPath,
+        modules: List[ModuleInfo],
+        packages,
+        # hasInit: bool
+    ):
         self.path: pathlib.PosixPath = path
         self.modules: List[ModuleInfo] = modules
         self.packages: List[PackageInfo] = packages
@@ -351,6 +370,5 @@ class PackageInfo(object):
 
 
 class ProjectInfo(object):
-    def __init__(self,
-                 rootPackage: PackageInfo):
+    def __init__(self, rootPackage: PackageInfo):
         self.rootPackage = rootPackage

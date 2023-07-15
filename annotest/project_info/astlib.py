@@ -4,7 +4,13 @@ from typing import List, Optional
 
 from annotest import constant
 from annotest.project_info.decorator_info.astlib import astToDecorators
-from annotest.project_info.project_type import FunctionInfo, ClassInfo, InstanceMethodInfo, ArgumentInfo, ArgType
+from annotest.project_info.project_type import (
+    FunctionInfo,
+    ClassInfo,
+    InstanceMethodInfo,
+    ArgumentInfo,
+    ArgType,
+)
 
 
 def _astToArguments(arguments: ast.arguments) -> List[ArgumentInfo]:
@@ -57,7 +63,7 @@ def _astToFunction(func: ast.FunctionDef) -> FunctionInfo:
 
 def getModuleFunctions(path: pathlib.PosixPath) -> List[FunctionInfo]:
     functionList: List[FunctionInfo] = []
-    with path.open(mode='r') as f:
+    with path.open(mode="r") as f:
         tree = ast.parse(f.read())
         # print(ast.dump(tree))
         for item in tree.body:
@@ -74,13 +80,15 @@ def getModuleFunctions(path: pathlib.PosixPath) -> List[FunctionInfo]:
 
 
 def has_module_import_test(path: pathlib.Path) -> bool:
-    with path.open(mode='r') as f:
+    with path.open(mode="r") as f:
         tree = ast.parse(f.read())
         for item in tree.body:
-            if (isinstance(item, ast.Expr) and
-                    isinstance(item.value, ast.Call) and
-                    isinstance(item.value.func, ast.Attribute) and
-                    item.value.func.attr == constant.module_import_test_annotation):
+            if (
+                isinstance(item, ast.Expr)
+                and isinstance(item.value, ast.Call)
+                and isinstance(item.value.func, ast.Attribute)
+                and item.value.func.attr == constant.module_import_test_annotation
+            ):
                 return True
 
         return False
@@ -137,7 +145,7 @@ def _astToClass(cls: ast.ClassDef) -> ClassInfo:
 
 def getModuleClasses(path: pathlib.PosixPath) -> List[ClassInfo]:
     classList: List[ClassInfo] = []
-    with path.open(mode='r') as f:
+    with path.open(mode="r") as f:
         tree = ast.parse(f.read())
         # print(ast.dump(tree))
         for item in tree.body:
@@ -155,7 +163,7 @@ def getModuleClasses(path: pathlib.PosixPath) -> List[ClassInfo]:
 
 def getModuleImports(path: pathlib.PosixPath) -> List[ast.stmt]:
     astImportList: List[ast.stmt] = []
-    with path.open(mode='r') as f:
+    with path.open(mode="r") as f:
         tree = ast.parse(f.read())
         # print(ast.dump(tree))
         for item in tree.body:
@@ -186,8 +194,9 @@ def _getVariableName(astAssign: ast.Assign) -> List[str]:
     elif isinstance(astAssign.targets[0], ast.Tuple):
         all_tuple_var_names = _get_all_tuple_variable_names(astAssign.targets[0])
         variableNameSet = variableNameSet.union(all_tuple_var_names)
-    elif (isinstance(astAssign.targets[0], ast.Attribute) or
-          isinstance(astAssign.targets[0], ast.Subscript)):
+    elif isinstance(astAssign.targets[0], ast.Attribute) or isinstance(
+        astAssign.targets[0], ast.Subscript
+    ):
         # Do not collect attribute setting
         # such as `keras.backend.update = update`
         # or subscript setting such as
@@ -203,7 +212,7 @@ def getTopLevelItemNameList(path: pathlib.PosixPath) -> List[str]:
     functionNameList = []
     classNameList = []
     globalVariableNameSet = set()
-    with path.open(mode='r') as f:
+    with path.open(mode="r") as f:
         tree = ast.parse(f.read())
         # print(path)
         # print(ast.dump(tree))
@@ -221,10 +230,12 @@ def getTopLevelItemNameList(path: pathlib.PosixPath) -> List[str]:
 
 def moduleHasError(path: pathlib.PosixPath) -> bool:
     try:
-        with path.open(mode='r') as f:
+        with path.open(mode="r") as f:
             tree = ast.parse(f.read())
     except Exception as exp:
-        print(f"WARNING: Syntactical error in module `{path}`. No tests were generated for this module.")
+        print(
+            f"WARNING: Syntactical error in module `{path}`. No tests were generated for this module."
+        )
         # logging.warning(f"Syntactical error in module `{path}`. No tests are generated for this module.")
         # logging.warning(type(exp))
         # logging.warning(exp.args)

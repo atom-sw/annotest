@@ -5,8 +5,12 @@ from annotest import constant
 from annotest.project_info.decorator_info import decorator_type, argument_type
 
 
-def _astCallToArgumentType(astArgumentType: ast.expr) -> argument_type.ArgumentTypeInformation:
-    args, keywords = _astCallToArgsAndKeywords(astArgumentType.args, astArgumentType.keywords)
+def _astCallToArgumentType(
+    astArgumentType: ast.expr,
+) -> argument_type.ArgumentTypeInformation:
+    args, keywords = _astCallToArgsAndKeywords(
+        astArgumentType.args, astArgumentType.keywords
+    )
 
     for i in range(len(args)):
         args[i] = _astExpressionToType(args[i])
@@ -36,25 +40,42 @@ def _astCallToArgumentType(astArgumentType: ast.expr) -> argument_type.ArgumentT
         return argumentType
     elif astArgumentType.func.attr == constant.ArgumentTypeInformation.Tuples.Name:
         # print(astArgumentType.func.attr, constant.ArgumentTypeInformation.Tuples.Name)
-        if len(keywords) != 0:  # This check is for development purposes and should not exist.
-            raise Exception("Something is wrong. How can a function with *args take keyword arguments.")
+        if (
+            len(keywords) != 0
+        ):  # This check is for development purposes and should not exist.
+            raise Exception(
+                "Something is wrong. How can a function with *args take keyword arguments."
+            )
         argumentType = argument_type.Tuples(args)
         return argumentType
-    elif astArgumentType.func.attr == constant.ArgumentTypeInformation.Dictionaries.Name:
+    elif (
+        astArgumentType.func.attr == constant.ArgumentTypeInformation.Dictionaries.Name
+    ):
         # print(astArgumentType.func.attr, constant.ArgumentTypeInformation.Dictionaries.Name)
         argumentType = argument_type.Dictionaries(*args, **keywords)
         return argumentType
-    elif astArgumentType.func.attr == constant.ArgumentTypeInformation.ComplicatedObject.Name:
+    elif (
+        astArgumentType.func.attr
+        == constant.ArgumentTypeInformation.ComplicatedObject.Name
+    ):
         # print(astArgumentType.func.attr, constant.ArgumentTypeInformation.ComplicatedObject.Name)
         argumentType = argument_type.ComplicatedObject(*args, **keywords)
         return argumentType
-    elif astArgumentType.func.attr == constant.ArgumentTypeInformation.MultipleTypes.Name:
+    elif (
+        astArgumentType.func.attr == constant.ArgumentTypeInformation.MultipleTypes.Name
+    ):
         # print(astArgumentType.func.attr, constant.ArgumentTypeInformation.MultipleTypes.Name)
-        if len(keywords) != 0:  # This check is for development purposes and should not exist.
-            raise Exception("Something is wrong. How can a function with *args take keyword arguments.")
+        if (
+            len(keywords) != 0
+        ):  # This check is for development purposes and should not exist.
+            raise Exception(
+                "Something is wrong. How can a function with *args take keyword arguments."
+            )
         argumentType = argument_type.MultipleTypes(args)
         return argumentType
-    elif astArgumentType.func.attr == constant.ArgumentTypeInformation.IntegerLists.Name:
+    elif (
+        astArgumentType.func.attr == constant.ArgumentTypeInformation.IntegerLists.Name
+    ):
         argumentType = argument_type.IntegerLists(*args, **keywords)
         return argumentType
     else:

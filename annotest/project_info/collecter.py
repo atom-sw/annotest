@@ -12,7 +12,11 @@ def _isInitModule(item):
 
 
 def _isTestModuleOrPackage(item):
-    rets = item.name.startswith("test") or item.name.endswith("test") or item.name.endswith("tests")
+    rets = (
+        item.name.startswith("test")
+        or item.name.endswith("test")
+        or item.name.endswith("tests")
+    )
     return rets
 
 
@@ -63,7 +67,14 @@ def _fileToModule(path: pathlib.PosixPath) -> Optional[ModuleInfo]:
         imports = astlib.getModuleImports(path)
         topLevelItemNameList = astlib.getTopLevelItemNameList(path)
         has_module_import_test = astlib.has_module_import_test(path)
-        mr = ModuleInfo(path, functions, classes, imports, topLevelItemNameList, has_module_import_test)
+        mr = ModuleInfo(
+            path,
+            functions,
+            classes,
+            imports,
+            topLevelItemNameList,
+            has_module_import_test,
+        )
         return mr
 
 

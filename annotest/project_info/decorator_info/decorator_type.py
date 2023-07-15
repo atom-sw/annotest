@@ -11,9 +11,7 @@ class Decorator(object):
 
 
 class ArgumentDecorator(Decorator):
-    def __init__(self,
-                 arg_name: str,
-                 arg_type: ArgumentTypeInformation):
+    def __init__(self, arg_name: str, arg_type: ArgumentTypeInformation):
         self.arg_name: str = arg_name
         self.arg_type: ArgumentTypeInformation = arg_type
 
@@ -33,14 +31,12 @@ class ArgumentDecorator(Decorator):
 
 
 class PreconditionDecorator(Decorator):
-    def __init__(self,
-                 predicate: str):
+    def __init__(self, predicate: str):
         self.predicate: str = predicate
 
 
 class DeadlineDecorator(Decorator):
-    def __init__(self,
-                 time: Optional[ast.expr] = None):
+    def __init__(self, time: Optional[ast.expr] = None):
         self.time: Optional[ast.expr] = time
 
 
@@ -53,6 +49,5 @@ class GeneratorDecorator(Decorator):
 
 
 class ConstructorExampleDecorator(Decorator):
-    def __init__(self,
-                 elements: ast.expr):
+    def __init__(self, elements: ast.expr):
         self.elements: ast.expr = elements

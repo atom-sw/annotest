@@ -1,4 +1,4 @@
-# In this version, we assume a generator function is defined 
+# In this version, we assume a generator function is defined
 # inside the module in which the decorator using it exists.
 from typing import List, Optional
 
@@ -6,17 +6,22 @@ from annotest.project_info import project_type
 from annotest.project_info.decorator_info import decorator_type
 
 
-def _getFunctionInfoByName(functionName: str,
-                           functionInfoList: List[project_type.FunctionInfo]) -> Optional[project_type.FunctionInfo]:
+def _getFunctionInfoByName(
+    functionName: str, functionInfoList: List[project_type.FunctionInfo]
+) -> Optional[project_type.FunctionInfo]:
     for item in functionInfoList:
         if item.name == functionName:
             return item
     return None
 
 
-def _linkInFunction(functionInfo: project_type.FunctionInfo,
-                    generatorFunctionsList: List[project_type.FunctionInfo]):
-    complicatedArgTypeDecoratorList = functionInfo.getComplicatedArgumentTypeInformationDecorators()
+def _linkInFunction(
+    functionInfo: project_type.FunctionInfo,
+    generatorFunctionsList: List[project_type.FunctionInfo],
+):
+    complicatedArgTypeDecoratorList = (
+        functionInfo.getComplicatedArgumentTypeInformationDecorators()
+    )
     for item in complicatedArgTypeDecoratorList:
         generatorName = item.arg_type.getGeneratorName()
         cFunctionInfo = _getFunctionInfoByName(generatorName, generatorFunctionsList)

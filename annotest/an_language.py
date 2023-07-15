@@ -15,33 +15,36 @@
 # Simplification: The ArgumentType obj cannot be used
 # keyword and non-keyword arguments (e.g., *args and **kwargs)
 
+
 def integers(min_value=0, max_value=1000):
     """
-        :param min_value: Optional[int]
-            Default: 0
-            Examples: 12
-        :param max_value: Optional[int]
-            Default: 1000
-            Examples: 300
+    :param min_value: Optional[int]
+        Default: 0
+        Examples: 12
+    :param max_value: Optional[int]
+        Default: 1000
+        Examples: 300
     """
     pass
 
 
-def floats(min_value=None,
-           max_value=None,
-           allow_nan=None,
-           allow_infinity=None,
-           width=64,
-           exclude_min=False,
-           exclude_max=False):
+def floats(
+    min_value=None,
+    max_value=None,
+    allow_nan=None,
+    allow_infinity=None,
+    width=64,
+    exclude_min=False,
+    exclude_max=False,
+):
     """
-        :param min_value: Optional[Union[int, float, Fraction, Decimal]]
-        :param max_value: Optional[Union[int, float, Fraction, Decimal]]
-        :param allow_nan: Optional[bool]
-        :param allow_infinity: Optional[bool]
-        :param width: int
-        :param exclude_min: bool
-        :param exclude_max: bool
+    :param min_value: Optional[Union[int, float, Fraction, Decimal]]
+    :param max_value: Optional[Union[int, float, Fraction, Decimal]]
+    :param allow_nan: Optional[bool]
+    :param allow_infinity: Optional[bool]
+    :param width: int
+    :param exclude_min: bool
+    :param exclude_max: bool
     """
     pass
 
@@ -61,10 +64,7 @@ def sampled(elements):
     pass
 
 
-def array_shapes(min_dims=1,
-                 max_dims=None,
-                 min_side=1,
-                 max_side=None):
+def array_shapes(min_dims=1, max_dims=None, min_side=1, max_side=None):
     """
     Array shapes for numpy arrays.
     :param min_dims: int
@@ -91,16 +91,13 @@ def np_arrays(dtype=None, shape=None):
 
 def tuples(*args):
     """
-        :param args: Several other ArgumentTypes
-            Examples: tuples(integers(), floats())
-        """
+    :param args: Several other ArgumentTypes
+        Examples: tuples(integers(), floats())
+    """
     pass
 
 
-def dictionaries(keys,
-                 values,
-                 min_size=0,
-                 max_size=None):
+def dictionaries(keys, values, min_size=0, max_size=None):
     """
     :param keys: ArgumentType
     Type of the keys of the dictionaries
@@ -116,7 +113,7 @@ def dictionaries(keys,
         Minimum of the size of the dictionaries
     :param max_size: Optional[int]
         Maximum of the size of the dictionaries
-        """
+    """
     pass
 
 
@@ -139,10 +136,7 @@ def multiple(*args):
     return _inner
 
 
-def integer_lists(min_len=1,
-                  max_len=None,
-                  min_value=1,
-                  max_value=None):
+def integer_lists(min_len=1, max_len=None, min_value=1, max_value=None):
     """
     Used for arguments that are lists of integers.
     :param min_len: int

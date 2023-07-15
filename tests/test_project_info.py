@@ -19,7 +19,6 @@ def test_to_literal_ast_name_constant():
 
 def test_to_literal_ast_unary_op():
     val_in = 3
-    val = ast.UnaryOp(op=ast.USub(),
-                      operand=ast.Num(n=3))
+    val = ast.UnaryOp(op=ast.USub(), operand=ast.Num(n=3))
     lit_val = to_literal(val)
     assert lit_val == -1 * val_in

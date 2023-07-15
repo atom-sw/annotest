@@ -2,7 +2,8 @@
 
 [![PyPI version](https://badge.fury.io/py/annotest.svg)](https://badge.fury.io/py/annotest)
 ![GitHub](https://img.shields.io/github/license/atom-sw/annotest)
-
+[![Downloads](https://static.pepy.tech/badge/annotest)](https://pepy.tech/project/annotest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
 aNNoTest is a tool (and an approach) to automatically

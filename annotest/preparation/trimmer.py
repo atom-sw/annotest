@@ -1,6 +1,11 @@
 from typing import List
 
-from annotest.project_info.project_type import ProjectInfo, PackageInfo, FunctionInfo, ClassInfo
+from annotest.project_info.project_type import (
+    ProjectInfo,
+    PackageInfo,
+    FunctionInfo,
+    ClassInfo,
+)
 
 
 def _getTestableFunctions(functions: List[FunctionInfo]):
@@ -31,7 +36,9 @@ def _getTestableClasses(classes: List[ClassInfo]):
     testableClassList = []
     for currentClass in classes:
         if currentClass.isTestable():
-            currentClass.instanceMethodsAndConstructor = _getTestableInstanceMethodsAndConstructorsOfClass(currentClass)
+            currentClass.instanceMethodsAndConstructor = (
+                _getTestableInstanceMethodsAndConstructorsOfClass(currentClass)
+            )
             if len(currentClass.instanceMethodsAndConstructor) != 0:
                 testableClassList.append(currentClass)
 
@@ -51,8 +58,10 @@ def _removeUntestableItemsInPackage(package: PackageInfo):
 def _removeEmptyModules(package: PackageInfo):
     nonEmptyModules = []
     for module in package.modules:
-        if (len(module.functions) + len(module.classes) != 0 or
-                module.has_module_import_test()):
+        if (
+            len(module.functions) + len(module.classes) != 0
+            or module.has_module_import_test()
+        ):
             nonEmptyModules.append(module)
     package.modules = nonEmptyModules
 
@@ -74,4 +83,3 @@ def keepTestableProject(projectDat: ProjectInfo):
     _removeUntestableItemsInPackage(projectDat.rootPackage)
     _removeEmptyModules(projectDat.rootPackage)
     _removeEmptyPackages(projectDat.rootPackage)
-

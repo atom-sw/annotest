@@ -6,25 +6,28 @@ from annotest.project_info import project_type
 
 
 def getEmptyModule() -> ast.Module:
-    astModule = ast.Module(body=[],
-                           type_ignores=[])
+    astModule = ast.Module(body=[], type_ignores=[])
     return astModule
 
 
 def getUnittestImports() -> ast.stmt:
-    astImport = ast.Import(names=[ast.alias(name='unittest', asname=None)])
+    astImport = ast.Import(names=[ast.alias(name="unittest", asname=None)])
     return astImport
 
 
 def getHypothesisImports() -> List[ast.stmt]:
-    astImportList = [ast.Import(names=[ast.alias(name='hypothesis', asname='hy')]),
-                     ast.Import(names=[ast.alias(name='hypothesis.strategies', asname='st')])]
+    astImportList = [
+        ast.Import(names=[ast.alias(name="hypothesis", asname="hy")]),
+        ast.Import(names=[ast.alias(name="hypothesis.strategies", asname="st")]),
+    ]
     return astImportList
 
 
 def getNumpyHypothesisImports() -> List[ast.stmt]:
-    astImportList = [ast.Import(names=[ast.alias(name='hypothesis.extra.numpy', asname='hynp')]),
-                     ast.Import(names=[ast.alias(name='numpy', asname='np')])]
+    astImportList = [
+        ast.Import(names=[ast.alias(name="hypothesis.extra.numpy", asname="hynp")]),
+        ast.Import(names=[ast.alias(name="numpy", asname="np")]),
+    ]
     return astImportList
 
 
@@ -35,37 +38,48 @@ def getTopLevelItemsImport(module: project_type.ModuleInfo) -> ast.ImportFrom:
         current = ast.alias(name=item, asname=None)
         aliasList.append(current)
 
-    astImportFrom = ast.ImportFrom(module=module.getModulePathInImportFormat(),
-                                   names=aliasList,
-                                   level=0)
+    astImportFrom = ast.ImportFrom(
+        module=module.getModulePathInImportFormat(), names=aliasList, level=0
+    )
 
     return astImportFrom
 
 
 def getEmptyUnitTestClass(className: str) -> ast.ClassDef:
-    astClassDef = ast.ClassDef(name=className,
-                               bases=[ast.Attribute(value=ast.Name(id='unittest', ctx=ast.Load()),
-                                                    attr='TestCase',
-                                                    ctx=ast.Load())],
-                               keywords=[],
-                               body=[],
-                               decorator_list=[])
+    astClassDef = ast.ClassDef(
+        name=className,
+        bases=[
+            ast.Attribute(
+                value=ast.Name(id="unittest", ctx=ast.Load()),
+                attr="TestCase",
+                ctx=ast.Load(),
+            )
+        ],
+        keywords=[],
+        body=[],
+        decorator_list=[],
+    )
 
     return astClassDef
 
 
 def getEmptyFunctionDefinition(funcName: str) -> ast.FunctionDef:
-    astFunctionDef = ast.FunctionDef(name=funcName,
-                                     args=ast.arguments(posonlyargs=[],
-                                                        args=[],
-                                                        vararg=None,
-                                                        kwonlyargs=[],
-                                                        kw_defaults=[],
-                                                        kwarg=None,
-                                                        defaults=[]),
-                                     body=[],
-                                     decorator_list=[],
-                                     returns=None, type_comment=None)
+    astFunctionDef = ast.FunctionDef(
+        name=funcName,
+        args=ast.arguments(
+            posonlyargs=[],
+            args=[],
+            vararg=None,
+            kwonlyargs=[],
+            kw_defaults=[],
+            kwarg=None,
+            defaults=[],
+        ),
+        body=[],
+        decorator_list=[],
+        returns=None,
+        type_comment=None,
+    )
     return astFunctionDef
 
 
@@ -100,9 +114,11 @@ def _getName(name: str) -> ast.Name:
 #     return astExpr
 
 
-def getPreconditionExpr(preconditionString: str,
-                        variableNamePrefix: str = None,
-                        variableNames: Optional[List[str]] = None) -> ast.Expr:
+def getPreconditionExpr(
+    preconditionString: str,
+    variableNamePrefix: str = None,
+    variableNames: Optional[List[str]] = None,
+) -> ast.Expr:
     if variableNamePrefix is None and variableNames is not None:
         raise Exception()
 
@@ -139,39 +155,57 @@ def getPreconditionExpr(preconditionString: str,
     astPredicate = parseString(preconditionString)
     # print(ast.dump(astPredicate))
     if variableNamePrefix is not None and variableNames is not None:
-        prefixVisitor = VariableNamePrefixAddingVisitor(variableNamePrefix, variableNames)
+        prefixVisitor = VariableNamePrefixAddingVisitor(
+            variableNamePrefix, variableNames
+        )
         prefixVisitor.visit(astPredicate)
 
     astExpr = ast.Expr(
-        value=ast.Call(func=ast.Attribute(value=ast.Name(id='hy', ctx=ast.Load()), attr='assume', ctx=ast.Load()),
-                       args=[astPredicate], keywords=[]))
+        value=ast.Call(
+            func=ast.Attribute(
+                value=ast.Name(id="hy", ctx=ast.Load()), attr="assume", ctx=ast.Load()
+            ),
+            args=[astPredicate],
+            keywords=[],
+        )
+    )
     return astExpr
 
 
 def getDrawAssign(leftName: str, astCallForArg: ast.Call) -> ast.Assign:
-    astAssign = ast.Assign(targets=[ast.Name(id=leftName, ctx=ast.Store())],
-                           value=ast.Call(
-                               func=ast.Attribute(value=ast.Name(id=constant.dataStrategyArgumentName,
-                                                                 ctx=ast.Load()),
-                                                  attr='draw',
-                                                  ctx=ast.Load()),
-                               args=[astCallForArg], keywords=[]),
-                           type_comment=None)
+    astAssign = ast.Assign(
+        targets=[ast.Name(id=leftName, ctx=ast.Store())],
+        value=ast.Call(
+            func=ast.Attribute(
+                value=ast.Name(id=constant.dataStrategyArgumentName, ctx=ast.Load()),
+                attr="draw",
+                ctx=ast.Load(),
+            ),
+            args=[astCallForArg],
+            keywords=[],
+        ),
+        type_comment=None,
+    )
     return astAssign
 
 
-def getGeneratorFunctionCall(argNameReturn: str,
-                             functionName: str,
-                             midArgNames: List[str]) -> ast.Assign:
+def getGeneratorFunctionCall(
+    argNameReturn: str, functionName: str, midArgNames: List[str]
+) -> ast.Assign:
     astNameList: List[ast.Name] = []
     for item in midArgNames:
         astName = _getName(item)
         astNameList.append(astName)
 
-    astAssign = ast.Assign(targets=[ast.Name(id=argNameReturn, ctx=ast.Store())],
-                           value=ast.Call(func=ast.Name(id=functionName, ctx=ast.Load()),
-                                          args=astNameList, keywords=[]),
-                           type_comment=None)
+    astAssign = ast.Assign(
+        targets=[ast.Name(id=argNameReturn, ctx=ast.Store())],
+        value=ast.Call(
+            func=ast.Name(id=functionName, ctx=ast.Load()),
+            args=astNameList,
+            keywords=[],
+        ),
+        type_comment=None,
+    )
     return astAssign
 
 
@@ -229,31 +263,35 @@ def getGeneratorFunctionCall(argNameReturn: str,
 #     return astStmt
 
 
-def getFunctionCallForArgNames(calleeName: str,
-                               argNames: List[str],
-                               returnVarName: Optional[str] = None):
+def getFunctionCallForArgNames(
+    calleeName: str, argNames: List[str], returnVarName: Optional[str] = None
+):
     astNameList = []
     for item in argNames:
         astName = _getName(item)
         astNameList.append(astName)
 
-    astCall = ast.Call(func=ast.Name(id=calleeName, ctx=ast.Load()),
-                       args=astNameList,
-                       keywords=[])
+    astCall = ast.Call(
+        func=ast.Name(id=calleeName, ctx=ast.Load()), args=astNameList, keywords=[]
+    )
 
     if returnVarName is None:
         astStmt = ast.Expr(value=astCall)
     else:
-        astStmt = ast.Assign(targets=[ast.Name(id=returnVarName, ctx=ast.Store())],
-                             value=astCall,
-                             type_comment=None)
+        astStmt = ast.Assign(
+            targets=[ast.Name(id=returnVarName, ctx=ast.Store())],
+            value=astCall,
+            type_comment=None,
+        )
     return astStmt
 
 
-def getFunctionCall(function: project_type.FunctionInfo,
-                    calleeName: str,
-                    returnVarName: Optional[str] = None,
-                    argumentExtraPrefix: str = ""):
+def getFunctionCall(
+    function: project_type.FunctionInfo,
+    calleeName: str,
+    returnVarName: Optional[str] = None,
+    argumentExtraPrefix: str = "",
+):
     argNameList: List[str] = []
 
     for arg in function.args:
@@ -261,11 +299,15 @@ def getFunctionCall(function: project_type.FunctionInfo,
             argName = argumentExtraPrefix + arg.name
             argNameList.append(argName)
     for arg in function.args:
-        if arg.type == project_type.ArgType.Vararg and function.argumentHasType(arg.name):
+        if arg.type == project_type.ArgType.Vararg and function.argumentHasType(
+            arg.name
+        ):
             argName = "*" + argumentExtraPrefix + arg.name
             argNameList.append(argName)
     for arg in function.args:
-        if arg.type == project_type.ArgType.Kwarg and function.argumentHasType(arg.name):
+        if arg.type == project_type.ArgType.Kwarg and function.argumentHasType(
+            arg.name
+        ):
             argName = "**" + argumentExtraPrefix + arg.name
             argNameList.append(argName)
     astStmt = getFunctionCallForArgNames(calleeName, argNameList, returnVarName)
@@ -275,11 +317,20 @@ def getFunctionCall(function: project_type.FunctionInfo,
 
 def get_module_import_test(module: project_type.ModuleInfo):
     module_import_format = module.getModulePathInImportFormat()
-    ast_module_import = ast.Import(names=[ast.alias(name=module_import_format, asname=None)])
-    ast_assignment = ast.Assign(targets=[ast.Name(id='x', ctx=ast.Store())], value=ast.Name(id=module_import_format, ctx=ast.Load()))
-    astFunctionDef = getEmptyFunctionDefinition(constant.module_import_test_function_name)
+    ast_module_import = ast.Import(
+        names=[ast.alias(name=module_import_format, asname=None)]
+    )
+    ast_assignment = ast.Assign(
+        targets=[ast.Name(id="x", ctx=ast.Store())],
+        value=ast.Name(id=module_import_format, ctx=ast.Load()),
+    )
+    astFunctionDef = getEmptyFunctionDefinition(
+        constant.module_import_test_function_name
+    )
     astFunctionDef.args.args.append(getArgFromName("self"))
     astFunctionDef.body = [ast_module_import, ast_assignment]
-    empty_unit_test_class_ast = getEmptyUnitTestClass(constant.module_import_test_class_name)
+    empty_unit_test_class_ast = getEmptyUnitTestClass(
+        constant.module_import_test_class_name
+    )
     empty_unit_test_class_ast.body = [astFunctionDef]
     return empty_unit_test_class_ast

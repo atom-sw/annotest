@@ -11,34 +11,54 @@ from annotest.unittest_engine import astlib
 from annotest.unittest_engine.hypothesis_lib import decorator
 
 
-def _getTestFunctionDecorators(function: project_type.FunctionInfo,
-                               enforceDataStrategyArg: bool = False) -> List[ast.Call]:
+def _getTestFunctionDecorators(
+    function: project_type.FunctionInfo, enforceDataStrategyArg: bool = False
+) -> List[ast.Call]:
     astDecoratorList = []
 
     givenKeywordList = []
     for arg in function.args:
-        if arg.type == project_type.ArgType.Arg and not function.argumentIsComplicatedObject(arg.name):
-            argumentTypeInformation = function.getArgumentTypeInformationForArgumentName(arg.name)
+        if (
+            arg.type == project_type.ArgType.Arg
+            and not function.argumentIsComplicatedObject(arg.name)
+        ):
+            argumentTypeInformation = (
+                function.getArgumentTypeInformationForArgumentName(arg.name)
+            )
             argumentDefault = arg.default
-            keywordForArg = decorator.getGivenKeywordForArg(arg.name, argumentTypeInformation, argumentDefault)
+            keywordForArg = decorator.getGivenKeywordForArg(
+                arg.name, argumentTypeInformation, argumentDefault
+            )
             # This check is not necessary. Because at this level, functions are all
             # type inferable. But, for now, since not all decorator types are
             # implemented, this check is added so the running examples can be used.
             if keywordForArg is not None:
                 givenKeywordList.append(keywordForArg)
     for arg in function.args:
-        if arg.type == project_type.ArgType.Vararg and function.argumentHasType(arg.name):
-            argumentTypeInformation = function.getArgumentTypeInformationForArgumentName(arg.name)
-            keywordForArg = decorator.getGivenKeywordForArg(arg.name, argumentTypeInformation, None)
+        if arg.type == project_type.ArgType.Vararg and function.argumentHasType(
+            arg.name
+        ):
+            argumentTypeInformation = (
+                function.getArgumentTypeInformationForArgumentName(arg.name)
+            )
+            keywordForArg = decorator.getGivenKeywordForArg(
+                arg.name, argumentTypeInformation, None
+            )
             # This check is not necessary. Because at this level, functions are all
             # type inferable. But, for now, since not all decorator types are
             # implemented, this check is added so the running examples can be used.
             if keywordForArg is not None:
                 givenKeywordList.append(keywordForArg)
     for arg in function.args:
-        if arg.type == project_type.ArgType.Kwarg and function.argumentHasType(arg.name):
-            argumentTypeInformation = function.getArgumentTypeInformationForArgumentName(arg.name)
-            keywordForArg = decorator.getGivenKeywordForArg(arg.name, argumentTypeInformation, None)
+        if arg.type == project_type.ArgType.Kwarg and function.argumentHasType(
+            arg.name
+        ):
+            argumentTypeInformation = (
+                function.getArgumentTypeInformationForArgumentName(arg.name)
+            )
+            keywordForArg = decorator.getGivenKeywordForArg(
+                arg.name, argumentTypeInformation, None
+            )
             # This check is not necessary. Because at this level, functions are all
             # type inferable. But, for now, since not all decorator types are
             # implemented, this check is added so the running examples can be used.
@@ -55,9 +75,13 @@ def _getTestFunctionDecorators(function: project_type.FunctionInfo,
     givenDecorator = decorator.getGivenDecorator(givenKeywordList)
     astDecoratorList.append(givenDecorator)
 
-    hasPrecondition = function.hasPreconditionDecorator() or function.needsPreconditionHeathCheck()
+    hasPrecondition = (
+        function.hasPreconditionDecorator() or function.needsPreconditionHeathCheck()
+    )
     deadlineDecorator = function.getDeadlineDecorator()
-    settingsDecorator = decorator.getSettingsDecorator(hasPrecondition, deadlineDecorator)
+    settingsDecorator = decorator.getSettingsDecorator(
+        hasPrecondition, deadlineDecorator
+    )
     astDecoratorList.append(settingsDecorator)
 
     return astDecoratorList
@@ -72,19 +96,31 @@ def _getGeneratorMidArgName(prefix, argName):
     return prefix + arg_name + "_"
 
 
-def _getStmtForComplicatedArgument(argTypeInfoDecorator: decorator_type.ArgumentDecorator,
-                                   extraPrefix: str = "") -> List[ast.stmt]:
+def _getStmtForComplicatedArgument(
+    argTypeInfoDecorator: decorator_type.ArgumentDecorator, extraPrefix: str = ""
+) -> List[ast.stmt]:
     astStmtList = []
-    genFuncInfo: project_type.FunctionInfo = argTypeInfoDecorator.arg_type.generatorFunctionInfo
+    genFuncInfo: project_type.FunctionInfo = (
+        argTypeInfoDecorator.arg_type.generatorFunctionInfo
+    )
     midArgNames = []
     argNames = genFuncInfo.getArgNames()
     for item in genFuncInfo.args:
         if item.type == project_type.ArgType.Arg:
-            argumentTypeInformation = genFuncInfo.getArgumentTypeInformationForArgumentName(item.name)
+            argumentTypeInformation = (
+                genFuncInfo.getArgumentTypeInformationForArgumentName(item.name)
+            )
             argumentDefault = item.default
-            astCallForArg = decorator.getFinalAstCallForArg(argumentTypeInformation, argumentDefault)
-            midArgName = _getGeneratorMidArgName(extraPrefix + constant.generatorArgPrefix,
-                                                 argTypeInfoDecorator.arg_name) + item.name
+            astCallForArg = decorator.getFinalAstCallForArg(
+                argumentTypeInformation, argumentDefault
+            )
+            midArgName = (
+                _getGeneratorMidArgName(
+                    extraPrefix + constant.generatorArgPrefix,
+                    argTypeInfoDecorator.arg_name,
+                )
+                + item.name
+            )
             midArgNames.append(midArgName)
             astAssign = astlib.getDrawAssign(midArgName, astCallForArg)
             astStmtList.append(astAssign)
@@ -92,11 +128,14 @@ def _getStmtForComplicatedArgument(argTypeInfoDecorator: decorator_type.Argument
     if genFuncInfo.hasPreconditionDecorator():
         functionPreconditionDecoratorList = genFuncInfo.getPreconditionDecorators()
         for cpItem in functionPreconditionDecoratorList:
-            astFunctionPrecondition = astlib.getPreconditionExpr(cpItem.predicate,
-                                                                 _getGeneratorMidArgName(extraPrefix +
-                                                                                         constant.generatorArgPrefix,
-                                                                                         argTypeInfoDecorator.arg_name),
-                                                                 argNames)
+            astFunctionPrecondition = astlib.getPreconditionExpr(
+                cpItem.predicate,
+                _getGeneratorMidArgName(
+                    extraPrefix + constant.generatorArgPrefix,
+                    argTypeInfoDecorator.arg_name,
+                ),
+                argNames,
+            )
             astStmtList.append(astFunctionPrecondition)
 
     current_arg_name = argTypeInfoDecorator.arg_name
@@ -104,21 +143,25 @@ def _getStmtForComplicatedArgument(argTypeInfoDecorator: decorator_type.Argument
         # To handle Python 3.6.
         current_arg_name = argTypeInfoDecorator.arg_name.s
 
-    generatorFunctionCall = astlib.getGeneratorFunctionCall(extraPrefix + current_arg_name,
-                                                            genFuncInfo.name,
-                                                            midArgNames)
+    generatorFunctionCall = astlib.getGeneratorFunctionCall(
+        extraPrefix + current_arg_name, genFuncInfo.name, midArgNames
+    )
     astStmtList.append(generatorFunctionCall)
 
     return astStmtList
 
 
-def _getTestFunctionBody(function: project_type.FunctionInfo,
-                         calleeName: str,
-                         returnVarName: Optional[str] = None) -> List[ast.stmt]:
+def _getTestFunctionBody(
+    function: project_type.FunctionInfo,
+    calleeName: str,
+    returnVarName: Optional[str] = None,
+) -> List[ast.stmt]:
     bodyList: List[ast.stmt] = []
 
     if function.hasComplicatedArguments():
-        complicatedArguments = function.getComplicatedArgumentTypeInformationDecorators()
+        complicatedArguments = (
+            function.getComplicatedArgumentTypeInformationDecorators()
+        )
         for item in complicatedArguments:
             currentComplicatedStmtList = _getStmtForComplicatedArgument(item)
             bodyList = bodyList + currentComplicatedStmtList
@@ -135,7 +178,9 @@ def _getTestFunctionBody(function: project_type.FunctionInfo,
     return bodyList
 
 
-def _getTestFunctionForFunctionInfo(function: project_type.FunctionInfo) -> ast.FunctionDef:
+def _getTestFunctionForFunctionInfo(
+    function: project_type.FunctionInfo,
+) -> ast.FunctionDef:
     astFunctionDef = _getFunctionDefSignature(function)
 
     astDecoratorList = _getTestFunctionDecorators(function)
@@ -147,15 +192,20 @@ def _getTestFunctionForFunctionInfo(function: project_type.FunctionInfo) -> ast.
     return astFunctionDef
 
 
-def _getFunctionDefSignature(func: project_type.FunctionInfo,
-                             functionName: Optional[str] = None,
-                             enforceDataStrategyArg: bool = False) -> ast.FunctionDef:
+def _getFunctionDefSignature(
+    func: project_type.FunctionInfo,
+    functionName: Optional[str] = None,
+    enforceDataStrategyArg: bool = False,
+) -> ast.FunctionDef:
     astFunctionDef = astlib.getEmptyFunctionDefinition("test_" + func.name)
     if functionName is not None:
         astFunctionDef = astlib.getEmptyFunctionDefinition("test_" + functionName)
     astFunctionDef.args.args.append(astlib.getArgFromName("self"))
     for arg in func.args:
-        if arg.type == project_type.ArgType.Arg and not func.argumentIsComplicatedObject(arg.name):
+        if (
+            arg.type == project_type.ArgType.Arg
+            and not func.argumentIsComplicatedObject(arg.name)
+        ):
             astArg = astlib.getArgFromName(arg.name)
             astFunctionDef.args.args.append(astArg)
     for arg in func.args:
@@ -178,9 +228,13 @@ def _getFunctionDefSignature(func: project_type.FunctionInfo,
     return astFunctionDef
 
 
-def _getTestFunctionForConstructor(classInfo: project_type.ClassInfo) -> ast.FunctionDef:
+def _getTestFunctionForConstructor(
+    classInfo: project_type.ClassInfo,
+) -> ast.FunctionDef:
     constructor = classInfo.getConstructor()
-    astFunctionDef = _getFunctionDefSignature(constructor, constant.constructorsTestFunctionNamePostfix)
+    astFunctionDef = _getFunctionDefSignature(
+        constructor, constant.constructorsTestFunctionNamePostfix
+    )
     astDecoratorList = _getTestFunctionDecorators(constructor)
     astFunctionDef.decorator_list = astDecoratorList
     astTestFunctionBodyList = _getTestFunctionBody(constructor, classInfo.name)
@@ -193,100 +247,162 @@ def _getConstructorMidArgName(prefix: str, argName: str) -> str:
     return prefix + argName
 
 
-def _getTestFunctionBodyForImplicitConstructor(classInfo: project_type.ClassInfo) -> List[ast.stmt]:
+def _getTestFunctionBodyForImplicitConstructor(
+    classInfo: project_type.ClassInfo,
+) -> List[ast.stmt]:
     stmtList: List[ast.stmt] = []
-    constructor = project_type.InstanceMethodInfo(name="__init__", args=[], decorators=[])
-    astFunctionCall = astlib.getFunctionCall(constructor, classInfo.name, constant.classObjectInstanceVariableName,
-                                             argumentExtraPrefix=constant.constructorArgPrefix)
+    constructor = project_type.InstanceMethodInfo(
+        name="__init__", args=[], decorators=[]
+    )
+    astFunctionCall = astlib.getFunctionCall(
+        constructor,
+        classInfo.name,
+        constant.classObjectInstanceVariableName,
+        argumentExtraPrefix=constant.constructorArgPrefix,
+    )
     stmtList.append(astFunctionCall)
 
     return stmtList
 
 
-def _getTestFunctionBodyForConstructorWithDraw(classInfo: project_type.ClassInfo) -> List[ast.stmt]:
+def _getTestFunctionBodyForConstructorWithDraw(
+    classInfo: project_type.ClassInfo,
+) -> List[ast.stmt]:
     stmtList: List[ast.stmt] = []
     constructor = classInfo.getConstructor()
 
     for arg in constructor.args:
-        if arg.type == project_type.ArgType.Arg and not constructor.argumentIsComplicatedObject(arg.name):
-            argumentTypeInformation = constructor.getArgumentTypeInformationForArgumentName(arg.name)
+        if (
+            arg.type == project_type.ArgType.Arg
+            and not constructor.argumentIsComplicatedObject(arg.name)
+        ):
+            argumentTypeInformation = (
+                constructor.getArgumentTypeInformationForArgumentName(arg.name)
+            )
             argumentDefault = arg.default
-            astCallForArg = decorator.getFinalAstCallForArg(argumentTypeInformation, argumentDefault)
-            midArgName = _getConstructorMidArgName(constant.constructorArgPrefix, arg.name)
+            astCallForArg = decorator.getFinalAstCallForArg(
+                argumentTypeInformation, argumentDefault
+            )
+            midArgName = _getConstructorMidArgName(
+                constant.constructorArgPrefix, arg.name
+            )
             astAssignForArg = astlib.getDrawAssign(midArgName, astCallForArg)
             stmtList.append(astAssignForArg)
 
     for arg in constructor.args:
-        if arg.type == project_type.ArgType.Vararg and constructor.argumentHasType(arg.name):
-            argumentTypeInformation = constructor.getArgumentTypeInformationForArgumentName(arg.name)
-            astCallForArg = decorator.getFinalAstCallForArg(argumentTypeInformation, None)
-            midArgName = _getConstructorMidArgName(constant.constructorArgPrefix, arg.name)
+        if arg.type == project_type.ArgType.Vararg and constructor.argumentHasType(
+            arg.name
+        ):
+            argumentTypeInformation = (
+                constructor.getArgumentTypeInformationForArgumentName(arg.name)
+            )
+            astCallForArg = decorator.getFinalAstCallForArg(
+                argumentTypeInformation, None
+            )
+            midArgName = _getConstructorMidArgName(
+                constant.constructorArgPrefix, arg.name
+            )
             astAssignForArg = astlib.getDrawAssign(midArgName, astCallForArg)
             stmtList.append(astAssignForArg)
 
     for arg in constructor.args:
-        if arg.type == project_type.ArgType.Kwarg and constructor.argumentHasType(arg.name):
-            argumentTypeInformation = constructor.getArgumentTypeInformationForArgumentName(arg.name)
-            astCallForArg = decorator.getFinalAstCallForArg(argumentTypeInformation, None)
-            midArgName = _getConstructorMidArgName(constant.constructorArgPrefix, arg.name)
+        if arg.type == project_type.ArgType.Kwarg and constructor.argumentHasType(
+            arg.name
+        ):
+            argumentTypeInformation = (
+                constructor.getArgumentTypeInformationForArgumentName(arg.name)
+            )
+            astCallForArg = decorator.getFinalAstCallForArg(
+                argumentTypeInformation, None
+            )
+            midArgName = _getConstructorMidArgName(
+                constant.constructorArgPrefix, arg.name
+            )
             astAssignForArg = astlib.getDrawAssign(midArgName, astCallForArg)
             stmtList.append(astAssignForArg)
 
     if constructor.hasComplicatedArguments():
-        complicatedArguments = constructor.getComplicatedArgumentTypeInformationDecorators()
+        complicatedArguments = (
+            constructor.getComplicatedArgumentTypeInformationDecorators()
+        )
         for item in complicatedArguments:
-            currentComplicatedStmtList = _getStmtForComplicatedArgument(item, constant.constructorArgPrefix)
+            currentComplicatedStmtList = _getStmtForComplicatedArgument(
+                item, constant.constructorArgPrefix
+            )
             stmtList = stmtList + currentComplicatedStmtList
 
     if constructor.hasPreconditionDecorator():
         functionPreconditionDecoratorList = constructor.getPreconditionDecorators()
         for cpItem in functionPreconditionDecoratorList:
-            astFunctionPrecondition = astlib.getPreconditionExpr(cpItem.predicate,
-                                                                 constant.constructorArgPrefix,
-                                                                 constructor.getArgNames())
+            astFunctionPrecondition = astlib.getPreconditionExpr(
+                cpItem.predicate,
+                constant.constructorArgPrefix,
+                constructor.getArgNames(),
+            )
             stmtList.append(astFunctionPrecondition)
 
-    astFunctionCall = astlib.getFunctionCall(constructor, classInfo.name, constant.classObjectInstanceVariableName,
-                                             argumentExtraPrefix=constant.constructorArgPrefix)
+    astFunctionCall = astlib.getFunctionCall(
+        constructor,
+        classInfo.name,
+        constant.classObjectInstanceVariableName,
+        argumentExtraPrefix=constant.constructorArgPrefix,
+    )
     stmtList.append(astFunctionCall)
 
     return stmtList
 
 
-def _getTestFunctionBodyForInstanceMethodCall(instanceMethodInfo: project_type.InstanceMethodInfo) -> List[ast.stmt]:
-    astTestFunctionBodyList = _getTestFunctionBody(instanceMethodInfo,
-                                                   constant.classObjectInstanceVariableName +
-                                                   "." +
-                                                   instanceMethodInfo.name)
+def _getTestFunctionBodyForInstanceMethodCall(
+    instanceMethodInfo: project_type.InstanceMethodInfo,
+) -> List[ast.stmt]:
+    astTestFunctionBodyList = _getTestFunctionBody(
+        instanceMethodInfo,
+        constant.classObjectInstanceVariableName + "." + instanceMethodInfo.name,
+    )
     return astTestFunctionBodyList
 
 
-def _getTestFunctionForInstanceMethodNoCcExamples(instanceMethodInfo: project_type.InstanceMethodInfo,
-                                                  classInfo: project_type.ClassInfo) -> ast.FunctionDef:
-    astFunctionDef = _getFunctionDefSignature(instanceMethodInfo, enforceDataStrategyArg=True)
-    astDecoratorList = _getTestFunctionDecorators(instanceMethodInfo, enforceDataStrategyArg=True)
+def _getTestFunctionForInstanceMethodNoCcExamples(
+    instanceMethodInfo: project_type.InstanceMethodInfo,
+    classInfo: project_type.ClassInfo,
+) -> ast.FunctionDef:
+    astFunctionDef = _getFunctionDefSignature(
+        instanceMethodInfo, enforceDataStrategyArg=True
+    )
+    astDecoratorList = _getTestFunctionDecorators(
+        instanceMethodInfo, enforceDataStrategyArg=True
+    )
     astFunctionDef.decorator_list = astDecoratorList
 
     if classInfo.getConstructor() is not None:
-        astConstructorInstantiation = _getTestFunctionBodyForConstructorWithDraw(classInfo)
+        astConstructorInstantiation = _getTestFunctionBodyForConstructorWithDraw(
+            classInfo
+        )
     else:
-        astConstructorInstantiation = _getTestFunctionBodyForImplicitConstructor(classInfo)
+        astConstructorInstantiation = _getTestFunctionBodyForImplicitConstructor(
+            classInfo
+        )
 
     astFunctionDef.body = astConstructorInstantiation
-    astInstanceMethodCall = _getTestFunctionBodyForInstanceMethodCall(instanceMethodInfo)
+    astInstanceMethodCall = _getTestFunctionBodyForInstanceMethodCall(
+        instanceMethodInfo
+    )
     astFunctionDef.body += astInstanceMethodCall
     return astFunctionDef
 
 
-def _getTestFunctionBodyForConstructorWithExample(classInfo: project_type.ClassInfo,
-                                                  currentConstructorExample) -> List[ast.stmt]:
+def _getTestFunctionBodyForConstructorWithExample(
+    classInfo: project_type.ClassInfo, currentConstructorExample
+) -> List[ast.stmt]:
     stmtList: List[ast.stmt] = []
     constructor = classInfo.getConstructor()
     argNameList = []
     for i in range(len(currentConstructorExample.elts)):
         item = currentConstructorExample.elts[i]
         astCallForArg = decorator.getAstCallForJust(item)
-        midArgName = _getConstructorMidArgName(constant.constructorArgPrefix, constructor.args[i + 1].name)
+        midArgName = _getConstructorMidArgName(
+            constant.constructorArgPrefix, constructor.args[i + 1].name
+        )
         if constructor.args[i + 1].type == project_type.ArgType.Arg:
             argNameList.append(midArgName)
         elif constructor.args[i + 1].type == project_type.ArgType.Vararg:
@@ -296,26 +412,36 @@ def _getTestFunctionBodyForConstructorWithExample(classInfo: project_type.ClassI
         astAssignForArg = astlib.getDrawAssign(midArgName, astCallForArg)
         stmtList.append(astAssignForArg)
 
-    astCallForConstructor = astlib.getFunctionCallForArgNames(classInfo.name,
-                                                              argNameList,
-                                                              constant.classObjectInstanceVariableName)
+    astCallForConstructor = astlib.getFunctionCallForArgNames(
+        classInfo.name, argNameList, constant.classObjectInstanceVariableName
+    )
     stmtList.append(astCallForConstructor)
     return stmtList
 
 
-def _getTestFunctionForInstanceMethodWithCcExample(instanceMethodInfo: project_type.InstanceMethodInfo,
-                                                   classInfo: project_type.ClassInfo,
-                                                   currentConstructorExample,
-                                                   testFunctionIndex: int) -> ast.FunctionDef:
+def _getTestFunctionForInstanceMethodWithCcExample(
+    instanceMethodInfo: project_type.InstanceMethodInfo,
+    classInfo: project_type.ClassInfo,
+    currentConstructorExample,
+    testFunctionIndex: int,
+) -> ast.FunctionDef:
     currentTestFunctionName = instanceMethodInfo.name + "_" + str(testFunctionIndex)
-    astFunctionDef = _getFunctionDefSignature(instanceMethodInfo,
-                                              functionName=currentTestFunctionName,
-                                              enforceDataStrategyArg=True)
-    astDecoratorList = _getTestFunctionDecorators(instanceMethodInfo, enforceDataStrategyArg=True)
+    astFunctionDef = _getFunctionDefSignature(
+        instanceMethodInfo,
+        functionName=currentTestFunctionName,
+        enforceDataStrategyArg=True,
+    )
+    astDecoratorList = _getTestFunctionDecorators(
+        instanceMethodInfo, enforceDataStrategyArg=True
+    )
     astFunctionDef.decorator_list = astDecoratorList
-    astConstructorInstantiation = _getTestFunctionBodyForConstructorWithExample(classInfo, currentConstructorExample)
+    astConstructorInstantiation = _getTestFunctionBodyForConstructorWithExample(
+        classInfo, currentConstructorExample
+    )
     astFunctionDef.body = astConstructorInstantiation
-    astInstanceMethodCall = _getTestFunctionBodyForInstanceMethodCall(instanceMethodInfo)
+    astInstanceMethodCall = _getTestFunctionBodyForInstanceMethodCall(
+        instanceMethodInfo
+    )
     astFunctionDef.body += astInstanceMethodCall
 
     return astFunctionDef
@@ -332,15 +458,16 @@ def _getClassTestClass(classInfo: project_type.ClassInfo) -> [ast.FunctionDef]:
     classInstanceMethods = classInfo.getInstanceMethods()
     for instMethod in classInstanceMethods:
         if len(constructorExampleList) == 0:
-            astFunctionDef = _getTestFunctionForInstanceMethodNoCcExamples(instMethod, classInfo)
+            astFunctionDef = _getTestFunctionForInstanceMethodNoCcExamples(
+                instMethod, classInfo
+            )
             testFunctionList.append(astFunctionDef)
         else:
             for testFunctionIndex in range(len(constructorExampleList)):
                 currentConstructorExample = constructorExampleList[testFunctionIndex]
-                astFunctionDef = _getTestFunctionForInstanceMethodWithCcExample(instMethod,
-                                                                                classInfo,
-                                                                                currentConstructorExample,
-                                                                                testFunctionIndex)
+                astFunctionDef = _getTestFunctionForInstanceMethodWithCcExample(
+                    instMethod, classInfo, currentConstructorExample, testFunctionIndex
+                )
                 testFunctionList.append(astFunctionDef)
 
     return testFunctionList
@@ -368,7 +495,9 @@ def _generateTestsForModule(module: project_type.ModuleInfo) -> Optional[str]:
             topLevelTestFunctions.append(cTestFunction)
 
     if len(topLevelTestFunctions) > 0:
-        functionTestClass = astlib.getEmptyUnitTestClass(constant.topLevelFunctionTestClassName)
+        functionTestClass = astlib.getEmptyUnitTestClass(
+            constant.topLevelFunctionTestClassName
+        )
         functionTestClass.body += topLevelTestFunctions
         testModuleAst.body.append(functionTestClass)
 
@@ -384,7 +513,10 @@ def _generateTestsForModule(module: project_type.ModuleInfo) -> Optional[str]:
     testModuleAst = ast.fix_missing_locations(testModuleAst)
     testModuleAstText = astor.to_source(testModuleAst)
 
-    if len(topLevelTestFunctions) + numberOfTestClasses == 0 and not module.has_module_import_test():
+    if (
+        len(topLevelTestFunctions) + numberOfTestClasses == 0
+        and not module.has_module_import_test()
+    ):
         return None
     else:
         return testModuleAstText
@@ -426,8 +558,12 @@ def add_strategy_to_test_module(module_string: str, strategy_name: str):
 def _module_testing(module: project_type.ModuleInfo):
     moduleString = _generateTestsForModule(module)
     if moduleString is not None:
-        if string_contains(moduleString, constant.ArgumentTypeInformation.IntegerLists.StrategyName):
-            moduleString = add_strategy_to_test_module(moduleString, constant.ArgumentTypeInformation.IntegerLists.StrategyName)
+        if string_contains(
+            moduleString, constant.ArgumentTypeInformation.IntegerLists.StrategyName
+        ):
+            moduleString = add_strategy_to_test_module(
+                moduleString, constant.ArgumentTypeInformation.IntegerLists.StrategyName
+            )
         testPathOfModule = module.getTestPath()
         file.makeModule(testPathOfModule)
         file.stringToFile(moduleString, testPathOfModule)

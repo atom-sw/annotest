@@ -20,10 +20,10 @@ def removeDir(dir: pathlib.PosixPath):
 
 
 def makeEmptyInitFileSafe(parentDir: pathlib.PosixPath):
-    path = parentDir / '__init__.py'
+    path = parentDir / "__init__.py"
     if not path.exists():
         try:
-            f = open(path, 'w+')
+            f = open(path, "w+")
             f.close()
         except OSError:
             print("Creation of the file %s failed" % path)
@@ -41,7 +41,7 @@ def makeTestDir():
 
 def makeModule(path: pathlib.PosixPath):
     try:
-        f = open(path, 'w+')
+        f = open(path, "w+")
         f.close()
     except OSError:
         print("Creation of the file %s failed" % path)

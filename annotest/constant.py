@@ -16,12 +16,14 @@ class DecoratorNameInCode(object):
     ConstructorExample = "cc_example"
 
 
-decoratorNames = [DecoratorNameInCode.Argument,
-                  DecoratorNameInCode.Deadline,
-                  DecoratorNameInCode.Exclude,
-                  DecoratorNameInCode.Generator,
-                  DecoratorNameInCode.Precondition,
-                  DecoratorNameInCode.ConstructorExample]
+decoratorNames = [
+    DecoratorNameInCode.Argument,
+    DecoratorNameInCode.Deadline,
+    DecoratorNameInCode.Exclude,
+    DecoratorNameInCode.Generator,
+    DecoratorNameInCode.Precondition,
+    DecoratorNameInCode.ConstructorExample,
+]
 
 
 # Name of argument types and their defaults in SUT
@@ -79,16 +81,18 @@ class ArgumentTypeInformation(object):
         max_value = None
 
 
-typeNames = [ArgumentTypeInformation.Integers.Name,
-             ArgumentTypeInformation.Floats.Name,
-             ArgumentTypeInformation.Sampled.Name,
-             ArgumentTypeInformation.ArrayShapes.Name,
-             ArgumentTypeInformation.NpArrays.Name,
-             ArgumentTypeInformation.Tuples.Name,
-             ArgumentTypeInformation.Dictionaries.Name,
-             ArgumentTypeInformation.ComplicatedObject.Name,
-             ArgumentTypeInformation.MultipleTypes.Name,
-             ArgumentTypeInformation.IntegerLists.Name]
+typeNames = [
+    ArgumentTypeInformation.Integers.Name,
+    ArgumentTypeInformation.Floats.Name,
+    ArgumentTypeInformation.Sampled.Name,
+    ArgumentTypeInformation.ArrayShapes.Name,
+    ArgumentTypeInformation.NpArrays.Name,
+    ArgumentTypeInformation.Tuples.Name,
+    ArgumentTypeInformation.Dictionaries.Name,
+    ArgumentTypeInformation.ComplicatedObject.Name,
+    ArgumentTypeInformation.MultipleTypes.Name,
+    ArgumentTypeInformation.IntegerLists.Name,
+]
 
 topLevelFunctionTestClassName = "Test_TopLevelFunctions"
 noArgCallParameter = "noArgCall"

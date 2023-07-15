@@ -3,8 +3,7 @@ import pathlib
 
 
 class CommandLineArgs:
-    def __init__(self,
-                 projectDirectory: pathlib.PosixPath):
+    def __init__(self, projectDirectory: pathlib.PosixPath):
         self._projectDirectory = projectDirectory
 
     @property
@@ -12,14 +11,21 @@ class CommandLineArgs:
         return self._projectDirectory
 
 
-parser = argparse.ArgumentParser(description="generate tests for scientific and ML Python programs.")
+parser = argparse.ArgumentParser(
+    description="generate tests for scientific and ML Python programs."
+)
 
 
 def _parserInit():
-    parser.add_argument("dir", default=".", nargs="?", metavar="DIR",
-                        help="the directory containing the program under tests. If no"
-                             " directory is passed, the current directory is selected "
-                             "by default.")
+    parser.add_argument(
+        "dir",
+        default=".",
+        nargs="?",
+        metavar="DIR",
+        help="the directory containing the program under tests. If no"
+        " directory is passed, the current directory is selected "
+        "by default.",
+    )
 
 
 def parseArgs() -> CommandLineArgs:

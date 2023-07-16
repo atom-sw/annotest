@@ -25,6 +25,12 @@ so you can install it using `pip`:
 pip install annotest
 ```
 
+To install the latest (unreleased) version, use the following command:
+
+```bash
+pip install git+https://github.com/atom-sw/annotest
+```
+
 We mainly tested aNNoTest with Python 3.6, but it should also work on later Python versions.
 
 

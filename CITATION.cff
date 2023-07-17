@@ -1,0 +1,10 @@
+@article{aNNoTest-JSS,
+   title = {An annotation-based approach for finding bugs in neural network programs},
+   journal = {Journal of Systems and Software},
+   volume = {201},
+   pages = {111669},
+   year = {2023},
+   issn = {0164-1212},
+   doi = {https://doi.org/10.1016/j.jss.2023.111669},
+   author = {Mohammad Rezaalipour and Carlo A. Furia}
+}

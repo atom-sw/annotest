@@ -1,13 +1,16 @@
 import argparse
 import pathlib
+import sys
+
+from annotest import version
 
 
 class CommandLineArgs:
-    def __init__(self, projectDirectory: pathlib.PosixPath):
-        self._projectDirectory = projectDirectory
+    def __init__(self, project_directory: pathlib.Path):
+        self._projectDirectory = project_directory
 
     @property
-    def projectDirectory(self) -> pathlib.PosixPath:
+    def project_directory(self) -> pathlib.Path:
         return self._projectDirectory
 
 
@@ -16,7 +19,7 @@ parser = argparse.ArgumentParser(
 )
 
 
-def _parserInit():
+def _parser_init():
     parser.add_argument(
         "dir",
         default=".",
@@ -27,14 +30,19 @@ def _parserInit():
         "by default.",
     )
 
+    parser.add_argument(
+        "-v", "--version", action="store_true", help="print version and exit"
+    )
 
-def parseArgs() -> CommandLineArgs:
-    _parserInit()
+
+def parse_args() -> CommandLineArgs:
+    _parser_init()
     args = parser.parse_args()
+
+    if args.version:
+        print(f"aNNoTest {version.__version__}")
+        sys.exit(0)
+
     directory = pathlib.Path(args.dir)
-    commandLineArgs = CommandLineArgs(directory)
-    return commandLineArgs
-
-
-def printHelpMessage():
-    parser.print_help()
+    command_line_args = CommandLineArgs(directory)
+    return command_line_args

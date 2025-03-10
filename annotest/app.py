@@ -5,7 +5,7 @@ import sys
 from annotest import commandline, constant
 
 # from annotest.preparation.fixer_step import fixing_process
-from annotest.preparation.trimmer import keepTestableProject
+from annotest.preparation.trimmer import keep_testable_project
 from annotest.project_info.collecter import getProject
 from annotest.project_info.project_type import ProjectInfo
 from annotest.unittest_engine.generator import generate_tests
@@ -29,22 +29,22 @@ def blacken_tests():
     subprocess.run(command)
 
 
-def generateTests():
-    projectDat: ProjectInfo = getProject(constant.projectRoot)
-    # fixing_process(projectDat)
-    keepTestableProject(projectDat)
-    generate_tests(projectDat)
+def generate():
+    project_dat: ProjectInfo = getProject(constant.projectRoot)
+    # fixing_process(project_dat)
+    keep_testable_project(project_dat)
+    generate_tests(project_dat)
     remove_unused_imports()
     blacken_tests()
     print(f"Test generation finished. Tests are in directory `{constant.testDirPath}`.")
 
 
 def run():
-    commandLineArgs = commandline.parseArgs()
+    command_line_args = commandline.parse_args()
     try:
-        os.chdir(commandLineArgs.projectDirectory.absolute())
+        os.chdir(command_line_args.project_directory.absolute())
     except FileNotFoundError as err:
         print(err)
         sys.exit()
 
-    generateTests()
+    generate()

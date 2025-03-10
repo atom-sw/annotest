@@ -79,7 +79,7 @@ def _removeEmptyPackages(package: PackageInfo):
     pass
 
 
-def keepTestableProject(projectDat: ProjectInfo):
+def keep_testable_project(projectDat: ProjectInfo):
     _removeUntestableItemsInPackage(projectDat.rootPackage)
     _removeEmptyModules(projectDat.rootPackage)
     _removeEmptyPackages(projectDat.rootPackage)

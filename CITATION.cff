@@ -1,3 +1,13 @@
+@InProceedings{RF-ICSME23-tool-annotest,
+  author = {Mohammad Rezaalipour and Carlo A. Furia},
+  title = {{aNNoTest}: An Annotation-based Test Generation Tool for Neural Network Programs},
+  booktitle = {Proceedings of the 39th IEEE International Conference on Software Maintenance and Evolution (ICSME)},
+  pages = {574--579},
+  year = {2023},
+  month = {October},
+  doi = {https://doi.org/10.1109/ICSME58846.2023.00075},
+}
+
 @article{aNNoTest-JSS,
    title = {An annotation-based approach for finding bugs in neural network programs},
    journal = {Journal of Systems and Software},

@@ -3,8 +3,9 @@
 [![PyPI version](https://badge.fury.io/py/annotest.svg)](https://badge.fury.io/py/annotest)
 ![GitHub](https://img.shields.io/github/license/atom-sw/annotest)
 [![Downloads](https://static.pepy.tech/badge/annotest)](https://pepy.tech/project/annotest)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
+[![Docs](https://readthedocs.org/projects/annotest/badge/?version=latest)](https://annotest.readthedocs.io/en/latest/)
+![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 
 aNNoTest is a tool (and an approach) to automatically
 generate test inputs for neural-network programs written in Python.
@@ -63,11 +64,31 @@ annotest $PROJECT_PATH
 ```
 
 
-## Citing aNNoTest
+## Publications on aNNoTest
 
-You can cite the [work on aNNoTest]((https://doi.org/10.1016/j.jss.2023.111669)) as follows:
+- Mohammad Rezaalipour and Carlo A. Furia. 
+**aNNoTest: An Annotation-based Test Generation Tool for Neural Network Programs.**
+In Proceedings of the 39th IEEE International Conference on Software Maintenance and Evolution (ICSME — tool demo track).
+Pgg. 574–579, IEEE Computer Society, October 2023.
+[https://doi.org/10.1109/ICSME58846.2023.00075](https://doi.org/10.1109/ICSME58846.2023.00075)
 
-> Mohammad Rezaalipour, Carlo A. Furia: An annotation-based approach for finding bugs in neural network programs. J. Syst. Softw. 201: 111669 (2023)
+```
+@InProceedings{RF-ICSME23-tool-annotest,
+  author = {Mohammad Rezaalipour and Carlo A. Furia},
+  title = {{aNNoTest}: An Annotation-based Test Generation Tool for Neural Network Programs},
+  booktitle = {Proceedings of the 39th IEEE International Conference on Software Maintenance and Evolution (ICSME)},
+  pages = {574--579},
+  year = {2023},
+  month = {October},
+  doi = {https://doi.org/10.1109/ICSME58846.2023.00075},
+}
+```
+
+- Mohammad Rezaalipour and Carlo A. Furia.
+**An Annotation-based Approach for Finding Bugs in Neural Network Programs.**
+Journal of Systems and Software, 201:111669.
+Elsevier, July 2023.
+[https://doi.org/10.1016/j.jss.2023.111669](https://doi.org/10.1016/j.jss.2023.111669)
 
 ```
 @article{aNNoTest-JSS,
@@ -81,7 +102,6 @@ You can cite the [work on aNNoTest]((https://doi.org/10.1016/j.jss.2023.111669))
    author = {Mohammad Rezaalipour and Carlo A. Furia}
 }
 ```
-
 
 ## Mirrors
 

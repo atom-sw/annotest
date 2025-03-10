@@ -2,9 +2,13 @@
 
 ## Not released
 
-- Use Black to reformat the generated Hypothesis tests.
-- Blacken the source code of aNNoTest.
-- Update readme.
+- Add command-line argument to display the version.
+- Minor refactoring.
+- Add docs.
+- Add `version.py` file for version management.
+- Reformat generated Hypothesis tests using Black.
+- Apply Black formatting to the aNNoTest source code.
+- Update the README.
 
 ## aNNoTest 0.1
 

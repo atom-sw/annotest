@@ -1,6 +1,6 @@
 # aNNoTest Changelog
 
-## Not released
+## aNNoTest 0.1.1
 
 - Add command-line argument to display the version.
 - Minor refactoring.

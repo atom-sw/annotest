@@ -5,7 +5,7 @@
 [![Downloads](https://static.pepy.tech/badge/annotest)](https://pepy.tech/project/annotest)
 [![Docs](https://readthedocs.org/projects/annotest/badge/?version=latest)](https://annotest.readthedocs.io/en/latest/)
 ![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
-![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/atom-sw/annotest)
 
 aNNoTest is a tool (and an approach) to automatically
 generate test inputs for neural-network programs written in Python.
